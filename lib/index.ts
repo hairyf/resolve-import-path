@@ -1,19 +1,23 @@
-import { join } from 'node:path'
+import path, { join } from 'node:path'
 import isInstalledGlobally from './is-installed-globally'
 import globalDirs from 'global-directory'
 import resolve from 'resolve'
 import consola from 'consola'
 import { readSelfReferenced } from './read-self-referenced'
+import { caller } from './caller'
 
-export function resolveImport(importName: string, ensure?: true): string
-export function resolveImport(importName: string, ensure = false, resolveOptions: resolve.SyncOpts = {
-  preserveSymlinks: false,
-}) {
+
+export function resolveImport(
+  importName: string,
+  ensure = false,
+  resolveOptions: resolve.SyncOpts = { preserveSymlinks: false }
+) {
+  const basedir = resolveOptions.basedir || path.dirname(caller())
   try {
-    return resolve.sync(importName, resolveOptions)
+    return resolve.sync(importName, { ...resolveOptions, basedir })
   }
   catch (error) {
-    const selfPackagePath = readSelfReferenced(importName)
+    const selfPackagePath = readSelfReferenced(importName, basedir)
     if (selfPackagePath)
       return selfPackagePath
     else

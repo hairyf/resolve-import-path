@@ -1,8 +1,8 @@
 import path from "path"
 import { findPackageJsonLimitedDepth } from "./read-self-package"
 
-export function readSelfReferenced(name: string) {
-  const packageJSON = findPackageJsonLimitedDepth(__dirname)
+export function readSelfReferenced(name: string, basedir: string) {
+  const packageJSON = findPackageJsonLimitedDepth(basedir)
   if (!packageJSON || !name.startsWith(packageJSON.source.name)) {
     return
   }
