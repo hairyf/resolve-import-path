@@ -1,5 +1,5 @@
 import { join } from 'node:path'
-import isInstalledGlobally from 'is-installed-globally'
+import isInstalledGlobally from './is-installed-globally'
 import globalDirs from 'global-directory'
 import resolve from 'resolve'
 import consola from 'consola'
