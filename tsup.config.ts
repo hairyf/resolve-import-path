@@ -4,7 +4,7 @@ const config = defineConfig([
   {
     entry: ['lib/index.ts'],
     external: ['ini'],
-    noExternal: ['is-installed-globally', 'global-directory'],
+    noExternal: ['is-installed-globally', 'global-directory', 'is-path-inside'],
     format: ['cjs'],
     dts: true,
   },
