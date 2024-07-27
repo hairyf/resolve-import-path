@@ -3,6 +3,7 @@ import isInstalledGlobally from './is-installed-globally'
 import globalDirs from 'global-directory'
 import resolve from 'resolve'
 import consola from 'consola'
+import { readSelfReferenced } from './read-self-referenced'
 
 export function resolveImport(importName: string, ensure?: true): string
 export function resolveImport(importName: string, ensure = false, resolveOptions: resolve.SyncOpts = {
@@ -12,19 +13,23 @@ export function resolveImport(importName: string, ensure = false, resolveOptions
     return resolve.sync(importName, resolveOptions)
   }
   catch (error) {
-    consola.log(error)
+    const selfPackagePath = readSelfReferenced(importName)
+    if (selfPackagePath)
+      return selfPackagePath
+    else
+      consola.log(error)
   }
 
   if (isInstalledGlobally) {
     try {
       return require.resolve(join(globalDirs.yarn.packages, importName))
     }
-    catch {}
+    catch { }
 
     try {
       return require.resolve(join(globalDirs.npm.packages, importName))
     }
-    catch {}
+    catch { }
   }
 
   if (ensure)
